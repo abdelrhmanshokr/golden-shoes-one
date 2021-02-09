@@ -13,6 +13,11 @@ app.use('public/uploads/images', express.static('public/uploads/images'));
 app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
 
+app.get('/', (req, res, next) => {
+    res.json({ 
+        message: 'home'
+    })
+})
 app.use('/api/shoes', shoeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/records', recordRoutes);
