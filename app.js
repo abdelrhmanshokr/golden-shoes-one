@@ -13,9 +13,11 @@ app.use('public/uploads/images', express.static('public/uploads/images'));
 app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
 
+
+// this route is souly for heroku to start that's it 
 app.get('/', (req, res, next) => {
     res.json({ 
-        message: 'home'
+        message: 'home',
     })
 })
 app.use('/api/shoes', shoeRoutes);
@@ -30,7 +32,8 @@ app.use((err, req, res, next) => {
 
 
 // connect to mongodb 
-mongoose.connect('mongodb://localhost/golden-shoes', { 
+mongoose.connect('mongodb+srv://admin:admin@golden-shoes-one.8vvhd.mongodb.net/golden-shoes?retryWrites=true&w=majority' || 
+                    'mongodb://localhost/golden-shoes', { 
         useNewUrlParser: true, 
         useUnifiedTopology: true
     })
