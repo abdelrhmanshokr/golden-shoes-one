@@ -17,6 +17,7 @@ router.get('/', checkAdmin, (req, res, next) => {
 
  
 // TODO decrease number of available shoes in stock by some amount
+// TODO link the purchase to the user and the shoe
 router.post('/', checkAuth, (req, res, next) => {
     let record = new Record(req.body);
     record.save()
