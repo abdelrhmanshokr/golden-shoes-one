@@ -40,7 +40,7 @@ router.post('/', checkAuth, (req, res, next) => {
                     // pushing recordId
                     shoe.recordsIds.push(record.id);
                     // pushing userId
-                    shoe.userId.push(req.user.id);
+                    shoe.userId.push(req.userId);
                 })
                 .catch(next);
 
