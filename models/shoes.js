@@ -13,7 +13,7 @@ const ShoeSchema = new Schema({
         // String passes numbers so enum will accept only these defined values 
         type: String,
 
-        enum: ['sneakers', 'sandles'],
+        enum: ['sneakers', 'sandles', 'classic'],
 
         required: true,
     },
