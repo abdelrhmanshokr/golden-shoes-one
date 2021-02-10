@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Record = require('../models/records');
+const User = require('../models/users');
+const Shoe = require('../models/shoes');
 
 const checkAuth = require('../middlewares/check-auth');
 const checkAdmin = require('../middlewares/check-admin');
@@ -22,6 +24,26 @@ router.post('/', checkAuth, (req, res, next) => {
     let record = new Record(req.body);
     record.save()
         .then((record) => {
+            // find the auth user and push the record to it 
+            User.findOne({ _id: req.user.id })
+                .then((user) => {
+                    // pushing shoesIds
+                    user.purchacesIds.push(req.purchaseIds);
+                    // pushing the recordIds
+                    user.recordsIds.push(record.id);
+                })
+                .catch(next);
+
+            // find the shoe and push the record and the user Ids to it
+            Shoe.find({ _id: req.shoe.id})
+                .then((shoe) => {
+                    // pushing recordId
+                    shoe.recordsIds.push(record.id);
+                    // pushing userId
+                    shoe.userId.push(req.user.id);
+                })
+                .catch(next);
+
             res.status(200).send(record);
         })
         .catch(next);
