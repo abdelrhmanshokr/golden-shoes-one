@@ -31,6 +31,7 @@ router.post('/', checkAuth, (req, res, next) => {
                     user.purchacesIds.push(req.purchaseIds);
                     // pushing the recordIds
                     user.recordsIds.push(record.id);
+                    user.save();
                 })
                 .catch(next);
 
@@ -41,6 +42,7 @@ router.post('/', checkAuth, (req, res, next) => {
                     shoe.recordsIds.push(record.id);
                     // pushing userId
                     shoe.userId.push(req.userId);
+                    shoe.save();
                 })
                 .catch(next);
 
