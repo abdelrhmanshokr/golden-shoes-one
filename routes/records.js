@@ -25,7 +25,7 @@ router.post('/', checkAuth, (req, res, next) => {
     record.save()
         .then((record) => {
             // find the auth user and push the record to it 
-            User.findOne({ _id: req.user.id })
+            User.find({ _id: req.userId })
                 .then((user) => {
                     // pushing shoesIds
                     user.purchacesIds.push(req.purchaseIds);
@@ -35,7 +35,7 @@ router.post('/', checkAuth, (req, res, next) => {
                 .catch(next);
 
             // find the shoe and push the record and the user Ids to it
-            Shoe.find({ _id: req.shoe.id})
+            Shoe.find({ _id: req.shoeId})
                 .then((shoe) => {
                     // pushing recordId
                     shoe.recordsIds.push(record.id);
@@ -44,7 +44,7 @@ router.post('/', checkAuth, (req, res, next) => {
                 })
                 .catch(next);
 
-            res.status(200).send(record);
+            return res.status(200).send(record);
         })
         .catch(next);
 });
