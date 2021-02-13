@@ -63,7 +63,7 @@ router.post('/', upload.single('image'), (req, res, next) => {
 
 
 // TODO only for admins 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', /*checkAdmin,*/ (req, res, next) => {
     Shoe.findByIdAndUpdate({ _id: req.params.id }, req.body)
     .then(() => {
         Shoe.findOne({ _id: req.params.id })
@@ -77,7 +77,7 @@ router.put('/:id', (req, res, next) => {
 
 
 // TODO only for admins
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', /*checkAdmin,*/ (req, res, next) => {
     Shoe.findByIdAndRemove({ _id: req.params.id })
     .then((shoe) => {
         res.status(200).send(shoe);
@@ -107,7 +107,7 @@ router.get('/category/subCategory', (req, res, next) => {
 
 
 // TODO only for admins 
-router.get('/allpurchases/:id', (req, res, next) => {
+router.get('/allpurchases/:id', /*checkAdmin,*/ (req, res, next) => {
     Shoe.findOne({ _id: req.params.id })
         .then(shoe => {
             Record.find({ purchaseIds: shoe.id })

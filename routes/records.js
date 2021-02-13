@@ -8,8 +8,17 @@ const checkAuth = require('../middlewares/check-auth');
 const checkAdmin = require('../middlewares/check-admin');
 
 
+/**
+ * @swagger
+ * /:
+ *  get:
+ *      description: Use to request all records
+ *      responses:
+ *      '200':
+ *          description: A successful response 
+ */
 // TODO only for admins 
-router.get('/', checkAdmin, (req, res, next) => {
+router.get('/', /*checkAdmin,*/ (req, res, next) => {
     Record.find({})
         .then((records) => {
             res.status(200).send(records);
@@ -17,10 +26,19 @@ router.get('/', checkAdmin, (req, res, next) => {
         .catch(next);
 });
 
- 
+
+/**
+ * @swagger
+ * /:
+ *  post:
+ *      description: Use to create/add a new record
+ *      responses: 
+ *      '200':
+ *          description: A successful response
+ */
 // TODO decrease number of available shoes in stock by some amount
 // TODO link the purchase to the user and the shoe
-router.post('/', checkAuth, (req, res, next) => {
+router.post('/', /*checkAuth,*/ (req, res, next) => {
     let record = new Record(req.body);
     record.save()
         .then((record) => {
@@ -31,7 +49,6 @@ router.post('/', checkAuth, (req, res, next) => {
                     user.purchacesIds.push(req.purchaseIds);
                     // pushing the recordIds
                     user.recordsIds.push(record.id);
-                    user.save();
                 })
                 .catch(next);
 
@@ -42,7 +59,6 @@ router.post('/', checkAuth, (req, res, next) => {
                     shoe.recordsIds.push(record.id);
                     // pushing userId
                     shoe.userId.push(req.userId);
-                    shoe.save();
                 })
                 .catch(next);
 
@@ -54,7 +70,7 @@ router.post('/', checkAuth, (req, res, next) => {
 
 // TODO check if admins can also modify a record
 // TODO adjust number of available shoes in stock by some amount 
-router.put('/:id', checkAuth, (req, res, next) => {
+router.put('/:id', /*checkAuth,*/ (req, res, next) => {
     Record.findByIdAndUpdate({ _id: req.params.id }, req.body)
         .then(() => {
             Record.findOne({ _id: req.params.id})
@@ -68,7 +84,7 @@ router.put('/:id', checkAuth, (req, res, next) => {
 
 
 // TODO check if admins can also delete a record
-router.delete('/:id', checkAuth, (req, res, next) => {
+router.delete('/:id', /*checkAuth,*/ (req, res, next) => {
     Record.findByIdAndRemove({ _id: req.params.id})
         .then((record) => {
             return res.status(200).send(record);

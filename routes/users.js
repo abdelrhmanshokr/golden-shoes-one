@@ -11,7 +11,7 @@ const checkAdmin = require('../middlewares/check-admin');
 
 
  
-router.get('/', checkAdmin, (req, res, next) => {
+router.get('/', /*checkAdmin,*/ (req, res, next) => {
     User.find({})
         .then((users) => {
             res.status(200).send(users);
@@ -33,7 +33,7 @@ router.post('/', (req, res, next) => {
 
 // TODO check if admins can change it if so add another middleware to handle it 
 // TODO registred user or the admin middleware 
-router.put('/:id', checkAuth, (req, res, next) => {
+router.put('/:id', /*checkAuth,*/ (req, res, next) => {
     User.findByIdAndUpdate({ _id: req.params.id }, req.body)
     .then(() => {
         User.findOne({ _id: req.params.id })
@@ -48,7 +48,7 @@ router.put('/:id', checkAuth, (req, res, next) => {
 
 // TODO admins can delete the user or a registered user can delete their account
 // TODO registred user or the admin middleware 
-router.delete('/:id', checkAuth, (req, res, next) => {
+router.delete('/:id', /*checkAuth,*/ (req, res, next) => {
     User.findByIdAndRemove({ _id: req.params.id })
     .then((user) => {
         res.status(200).send(user);
@@ -140,7 +140,7 @@ router.post('/login', (req, res, next) => {
 
 // TODO how to return this user's purchases to the same user
 // // TODO registred user or the admin middleware how not to pass both this or that
-router.get('/allpurchases/:id', checkAuth, (req, res, next) => {
+router.get('/allpurchases/:id', /*checkAuth,*/ (req, res, next) => {
     User.findOne({ _id: req.params.id })
         .then(user => {
             Record.find({ userId: user.id })
