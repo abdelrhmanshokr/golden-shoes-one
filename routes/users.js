@@ -10,7 +10,21 @@ const checkAuth = require('../middlewares/check-auth');
 const checkAdmin = require('../middlewares/check-admin');
 
 
- 
+/**
+ * @swagger
+ * /api/users/:
+ *  get:
+ *    description: Use to request all users in the system
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ *        content:
+ *          application/json:
+ *              schema:
+ *                  type: array
+ *                  item:
+ *                   type: any
+ */
 router.get('/', /*checkAdmin,*/ (req, res, next) => {
     User.find({})
         .then((users) => {
@@ -60,12 +74,12 @@ router.delete('/:id', /*checkAuth,*/ (req, res, next) => {
 // signup end point
 router.post('/signup', (req, res, next) => {
     // check if the user exists first 
-    User.find({ number: req.body.number })
+    User.find({ phoneNumber: req.body.phoneNumber })
         .exec()
         .then(user => {
             if(user.length > 0){
                 return res.status(422).json({
-                    message: `this number ${req.body.number} already exists please try again with another number`
+                    message: `this phoneNumber ${req.body.phoneNumber} already exists please try again with another phoneNumber`
                 });
             }else{
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -76,7 +90,7 @@ router.post('/signup', (req, res, next) => {
                     }else{
                         const user = new User({
                             userName: req.body.userName,
-                            number: req.body.number,
+                            phoneNumber: req.body.phoneNumber,
                             password: hash
                         });
                         user.save()
@@ -97,7 +111,7 @@ router.post('/signup', (req, res, next) => {
 
 // login end point
 router.post('/login', (req, res, next) => {
-    User.find({ userName: req.body.userName, number: req.body.number })
+    User.find({ userName: req.body.userName, phoneNumber: req.body.phoneNumber })
         .exec()
         .then(user => {
             if(user.length < 1){
@@ -114,7 +128,7 @@ router.post('/login', (req, res, next) => {
                         // create the jwt 
                         const token = jwt.sign(
                             {
-                                number: user[0].number,
+                                phoneNumber: user[0].phoneNumber,
                                 user_id: user[0]._id,
                                 isAdmin: user[0].isAdmin
                             },

@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Record = require('../models/records');
-const User = require('../models/users');
-const Shoe = require('../models/shoes');
 
 const checkAuth = require('../middlewares/check-auth');
 const checkAdmin = require('../middlewares/check-admin');
@@ -10,12 +8,18 @@ const checkAdmin = require('../middlewares/check-admin');
 
 /**
  * @swagger
- * /:
+ * /api/records/:
  *  get:
- *      description: Use to request all records
- *      responses:
+ *    description: Use to request all records by all clients
+ *    responses:
  *      '200':
- *          description: A successful response 
+ *        description: A successful response
+ *        content:
+ *          application/json:
+ *              schema:
+ *                  type: array
+ *                  item:
+ *                   type: string
  */
 // TODO only for admins 
 router.get('/', /*checkAdmin,*/ (req, res, next) => {
@@ -27,9 +31,24 @@ router.get('/', /*checkAdmin,*/ (req, res, next) => {
 });
 
 
-
+/**
+ * @swagger
+ * /api/records/user/{userId}:
+ *  get:
+ *    description: Use to request all records by one client by their Id
+ *    parameters:
+ *      - name: userId
+ *        description: user's Id 
+ *        in: path
+ *        schema:
+ *          type: integer 
+ *        required: true 
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 //TODO user gets their own records end point
-router.get('/:userId', (req, res, next) => {
+router.get('/user/:userId', (req, res, next) => {
     Record.find({ userId: req.params.userId })
         .then((records) => {
             if(records.length > 0){
@@ -46,54 +65,109 @@ router.get('/:userId', (req, res, next) => {
 
 /**
  * @swagger
- * /:
- *  post:
- *      description: Use to create/add a new record
- *      responses: 
+ * /api/records/{recordId}:
+ *  get:
+ *    description: Use to request one record by its Id
+ *    parameters:
+ *      - name: recordId
+ *        description: record's Id
+ *        in: path
+ *        schema:
+ *          type: integer 
+ *        required: true 
+ *    responses:
  *      '200':
- *          description: A successful response
+ *        description: A successful response
  */
-// TODO decrease number of available shoes in stock by some amount
-// TODO link the purchase to the user and the shoe
-router.post('/', /*checkAuth,*/ (req, res, next) => {
-    let record = new Record({
-        purchaseIds: req.body.purchaseIds,
-        userId: req.body.userId
-    });
-    record.save()
+// get one record by its Id
+// TODO user gets their own records end point check if this user is the auth user
+router.get('/:recordId', (req, res, next) => {
+    Record.findOne({ _id: req.params.recordId })
         .then((record) => {
-            // find the auth user and push the record to it 
-            User.find({ _id: req.userId })
-                .then((user) => {
-                    // pushing shoesIds
-                    user.purchacesIds.push(req.purchaseIds);
-                    // pushing the recordIds
-                    user.recordsIds.push(record.id);
-                })
-                .catch(next);
-
-            // // find the shoe and push the record and the user Ids to it
-            Shoe.find({ _id: req.shoeId})
-                .then((shoe) => {
-                    // pushing recordId
-                    shoe.recordsIds.push(record.id);
-                    // pushing userId
-                    shoe.userId.push(req.userId);
-                })
-                .catch(next);
-
-            return res.status(200).send(record);
+            if(record){
+                return res.status(200).send(record);
+            }else{
+                return res.status(404).json({
+                    message: 'No such record'
+                });
+            }
         })
         .catch(next);
 });
 
 
+/**
+ * @swagger
+ * /api/records/:
+ *  post:
+ *    description: Use to add a new record with each new purchase
+ *    parameters:
+ *      - name: reqBody
+ *        description: request body 
+ *        in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *               userId: 
+ *                  type: [integer]
+ *               purchasesIds:
+ *                  type: [integer]
+ *          required:
+ *              - purchaseIds
+ *              - userId
+ *    responses:
+ *      '200':
+ *        description: Successfully added a record (a purchase is done and stored)
+ */
+// TODO decrease number of available shoes in stock by some amount
+router.post('/', /*checkAuth,*/ (req, res, next) => {
+    let record = new Record({
+        purchasesIds: req.body.purchasesIds,
+        userId: req.body.userId
+    });
+    record.save()
+        .then((record) => {
+            res.status(200).send(record);
+        })
+        .catch(next);
+});
+
+
+/**
+ * @swagger
+ * /api/records/{recordId}:
+ *  put:
+ *    description: Use to add a new record with each new purchase
+ *    parameters:
+ *      - name: recordId
+ *        description: record's Id to update
+ *        in: path
+ *        schema:
+ *          type: integer
+ *        required: true
+ *      - name: reqBody
+ *        description: request body 
+ *        in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *               userId: 
+ *                  type: [integer]
+ *               purchasesIds:
+ *                  type: [integer]
+ *          required:
+ *              - purchaseIds
+ *              - userId
+ *    responses:
+ *      '200':
+ *        description: Successfully added a record (a purchase is done and stored)
+ */
 // TODO check if admins can also modify a record
 // TODO adjust number of available shoes in stock by some amount 
-router.put('/:id', /*checkAuth,*/ (req, res, next) => {
-    Record.findByIdAndUpdate({ _id: req.params.id }, req.body)
+router.put('/:recordId', /*checkAuth,*/ (req, res, next) => {
+    Record.findByIdAndUpdate({ _id: req.params.recordId }, req.body)
         .then(() => {
-            Record.findOne({ _id: req.params.id})
+            Record.findOne({ _id: req.params.recordId })
                 .then((record) => {
                     res.status(200).send(record);
                 })
@@ -103,9 +177,25 @@ router.put('/:id', /*checkAuth,*/ (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /api/records/{recordId}:
+ *  delete:
+ *    description: Use to delete one record by its Id
+ *    parameters:
+ *      - name: recordId
+ *        description: record's Id 
+ *        in: path
+ *        schema:
+ *          type: integer 
+ *        required: true 
+ *    responses:
+ *      '200':
+ *        description: Successfully deleted a record
+ */
 // TODO check if admins can also delete a record
-router.delete('/:id', /*checkAuth,*/ (req, res, next) => {
-    Record.findByIdAndRemove({ _id: req.params.id})
+router.delete('/:recordId', /*checkAuth,*/ (req, res, next) => {
+    Record.findByIdAndRemove({ _id: req.params.recordId})
         .then((record) => {
             return res.status(200).send(record);
         })

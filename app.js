@@ -48,7 +48,7 @@ app.use('/golden-shoes-api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 // error handling middleware
 app.use((err, req, res, next) => {
-    res.send(400, err.message);
+    return res.status(400).send(err.message);
 });
 
 

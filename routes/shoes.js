@@ -34,7 +34,21 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-
+/**
+ * @swagger
+ * /api/shoes/:
+ *  get:
+ *    description: Use to request all shoes in the system
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ *        content:
+ *          application/json:
+ *              schema:
+ *                  type: array
+ *                  item:
+ *                   type: any
+ */
 router.get('/', (req, res, next) => {
     Shoe.find({})
         .then((shoes) => {

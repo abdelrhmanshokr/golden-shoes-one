@@ -12,7 +12,7 @@ const RecordSchema = new Schema({
     
 
     // TODO add a flag to indicate if the purchase is deleted or not
-    purchaseIds: [{
+    purchasesIds: [{
         type: mongoose.Schema.Types.ObjectId,
         ref:  'Shoe',
         required: true,

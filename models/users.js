@@ -9,7 +9,7 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    number: {
+    phoneNumber: {
         type: Number,
         required: true,
         unique: true,
@@ -24,17 +24,17 @@ const UserSchema = new Schema({
     isAdmin: {
         type: Boolean,
         default: 0
-    },
+    }
 
 
-    purchasesIds: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Shoe'
-    }],
-    recordsIds: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Record'
-    }]
+    // purchasesIds: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Shoe'
+    // }],
+    // recordsIds: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Record'
+    // }]
 });
 
 
