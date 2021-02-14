@@ -44,6 +44,16 @@ router.get('/', (req, res, next) => {
 }); 
 
 
+
+router.get('/:id', (req, res, next) => {
+    Shoe.findOne({ _id: req.file.params.id })
+        .then((shoe) => {
+            res.status(200).send(shoe);
+        })
+        .catch(next);
+});
+
+
 // TODO only for admins
 router.post('/', upload.single('image'), (req, res, next) => {
     let shoe = new Shoe({

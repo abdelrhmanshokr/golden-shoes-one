@@ -9,12 +9,7 @@ const RecordSchema = new Schema({
         required: true,
         default: Date.now()
     },
-    stat: { 
-        // if 0 then it's not delivered yet, if 1 then it's delivered 
-        type: Boolean,
-        default: 0
-    },
-
+    
 
     // TODO add a flag to indicate if the purchase is deleted or not
     purchaseIds: [{

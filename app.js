@@ -53,8 +53,8 @@ app.use((err, req, res, next) => {
 
 
 // connect to mongodb 
-mongoose.connect('mongodb+srv://admin:admin@golden-shoes-one.8vvhd.mongodb.net/golden-shoes?retryWrites=true&w=majority' 
-                    || 'mongodb://localhost/golden-shoes', { 
+mongoose.connect(/*'mongodb+srv://admin:admin@golden-shoes-one.8vvhd.mongodb.net/golden-shoes?retryWrites=true&w=majority' 
+                    || */'mongodb://localhost/golden-shoes', { 
         useNewUrlParser: true, 
         useUnifiedTopology: true
     })

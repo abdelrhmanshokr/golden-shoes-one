@@ -27,6 +27,23 @@ router.get('/', /*checkAdmin,*/ (req, res, next) => {
 });
 
 
+
+//TODO user gets their own records end point
+router.get('/:userId', (req, res, next) => {
+    Record.find({ userId: req.params.userId })
+        .then((records) => {
+            if(records.length > 0){
+                return res.status(200).send(records);
+            }else{
+                return res.status(404).json({
+                    message: 'No previous purchases for this user'
+                });
+            }
+        })
+        .catch(next);
+});
+
+
 /**
  * @swagger
  * /:
@@ -39,7 +56,10 @@ router.get('/', /*checkAdmin,*/ (req, res, next) => {
 // TODO decrease number of available shoes in stock by some amount
 // TODO link the purchase to the user and the shoe
 router.post('/', /*checkAuth,*/ (req, res, next) => {
-    let record = new Record(req.body);
+    let record = new Record({
+        purchaseIds: req.body.purchaseIds,
+        userId: req.body.userId
+    });
     record.save()
         .then((record) => {
             // find the auth user and push the record to it 
@@ -52,7 +72,7 @@ router.post('/', /*checkAuth,*/ (req, res, next) => {
                 })
                 .catch(next);
 
-            // find the shoe and push the record and the user Ids to it
+            // // find the shoe and push the record and the user Ids to it
             Shoe.find({ _id: req.shoeId})
                 .then((shoe) => {
                     // pushing recordId

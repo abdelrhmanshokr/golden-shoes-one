@@ -138,7 +138,7 @@ router.post('/login', (req, res, next) => {
 });
 
 
-// TODO how to return this user's purchases to the same user
+// TODO how to return this user's purchases to the same registered user
 // // TODO registred user or the admin middleware how not to pass both this or that
 router.get('/allpurchases/:id', /*checkAuth,*/ (req, res, next) => {
     User.findOne({ _id: req.params.id })
