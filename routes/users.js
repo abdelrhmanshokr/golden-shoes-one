@@ -120,15 +120,6 @@ router.put('/:id', /*checkAuth,*/ (req, res, next) => {
                 })
             }
         });
-    // User.findByIdAndUpdate({ _id: req.params.id }, req.body)
-    // .then(() => {
-    //     User.findOne({ _id: req.params.id })
-    //     .then((user) => {
-    //         res.status(200).send(user);
-    //     })
-    //     .catch(next);
-    // })
-    // .catch(next);
 });
 
 
@@ -159,6 +150,32 @@ router.delete('/:userId', /*checkAuth,*/ (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /api/users/signup:
+ *  post:
+ *    description: Use to sign a new user up to the system
+ *    parameters:
+ *      - name: reqBody
+ *        description: request body 
+ *        in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *               userName: 
+ *                  type: string
+ *               phoneNumber:
+ *                  type: integer
+ *               password:
+ *                  type: string
+ *          required:
+ *              - userName
+ *              - phoneNumber
+ *              - password
+ *    responses:
+ *      '200':
+ *        description: Successfully created a new user
+ */
 // signup end point
 router.post('/signup', (req, res, next) => {
     // check if the user exists first 
@@ -197,6 +214,32 @@ router.post('/signup', (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /api/users/login:
+ *  post:
+ *    description: Use to login with user name, password and phone number
+ *    parameters:
+ *      - name: reqBody
+ *        description: request body 
+ *        in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *               userName: 
+ *                  type: string
+ *               phoneNumber:
+ *                  type: integer
+ *               password:
+ *                  type: string
+ *          required:
+ *              - userName
+ *              - phoneNumber
+ *              - password
+ *    responses:
+ *      '200':
+ *        description: Successfully loggedin
+ */
 // login end point
 router.post('/login', (req, res, next) => {
     User.find({ userName: req.body.userName, phoneNumber: req.body.phoneNumber })
