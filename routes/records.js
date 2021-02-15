@@ -13,7 +13,7 @@ const checkAdmin = require('../middlewares/check-admin');
  *    description: Use to request all records by all clients
  *    responses:
  *      '200':
- *        description: A successful response
+ *        description: successfully requested all records (purchases)
  *        content:
  *          application/json:
  *              schema:
@@ -45,7 +45,7 @@ router.get('/', /*checkAdmin,*/ (req, res, next) => {
  *        required: true 
  *    responses:
  *      '200':
- *        description: A successful response
+ *        description: successfully requested all records by one user
  */
 //TODO user gets their own records end point
 router.get('/user/:userId', (req, res, next) => {
@@ -77,7 +77,7 @@ router.get('/user/:userId', (req, res, next) => {
  *        required: true 
  *    responses:
  *      '200':
- *        description: A successful response
+ *        description: successfully requested one record by its Id
  */
 // get one record by its Id
 // TODO user gets their own records end point check if this user is the auth user
@@ -137,7 +137,7 @@ router.post('/', /*checkAuth,*/ (req, res, next) => {
  * @swagger
  * /api/records/{recordId}:
  *  put:
- *    description: Use to add a new record with each new purchase
+ *    description: Use to modify an existing record
  *    parameters:
  *      - name: recordId
  *        description: record's Id to update
@@ -160,14 +160,14 @@ router.post('/', /*checkAuth,*/ (req, res, next) => {
  *              - userId
  *    responses:
  *      '200':
- *        description: Successfully added a record (a purchase is done and stored)
+ *        description: Successfully modified an exising record (a purchase is done and stored)
  */
 // TODO check if admins can also modify a record
 // TODO adjust number of available shoes in stock by some amount 
 router.put('/:recordId', /*checkAuth,*/ (req, res, next) => {
     Record.findByIdAndUpdate({ _id: req.params.recordId }, req.body)
         .then(() => {
-            Record.findOne({ _id: req.params.recordId })
+            Record.findOne({ _id: req.params.recordId})
                 .then((record) => {
                     res.status(200).send(record);
                 })

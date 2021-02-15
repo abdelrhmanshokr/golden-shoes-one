@@ -36,16 +36,14 @@ const ShoeSchema = new Schema({
     },
 
 
-    recordsId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Record',
-        default: []
-    }],
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: []
-    }
+    // recordsId: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Record'
+    // }],
+    // userId: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User'
+    // }
 });
 
 

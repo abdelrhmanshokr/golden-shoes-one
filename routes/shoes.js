@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Shoe = require('../models/shoes');
+const Record = require('../models/records');
 const multer = require('multer');
 
 
@@ -41,7 +42,7 @@ const upload = multer({
  *    description: Use to request all shoes in the system
  *    responses:
  *      '200':
- *        description: A successful response
+ *        description: Successfully requested all shoes in the system
  *        content:
  *          application/json:
  *              schema:
@@ -58,9 +59,24 @@ router.get('/', (req, res, next) => {
 }); 
 
 
-
-router.get('/:id', (req, res, next) => {
-    Shoe.findOne({ _id: req.file.params.id })
+/**
+ * @swagger
+ * /api/shoes/{shoeId}:
+ *  get:
+ *    description: Use to request one pair of shoes by its Id
+ *    parameters:
+ *      - name: shoeId
+ *        description: shoes' Id
+ *        in: path
+ *        schema:
+ *          type: integer 
+ *        required: true 
+ *    responses:
+ *      '200':
+ *        description: Successfully requested one pair of shoes by its Id
+ */
+router.get('/:shoeId', (req, res, next) => {
+    Shoe.findOne({ _id: req.params.shoeId })
         .then((shoe) => {
             res.status(200).send(shoe);
         })
@@ -68,6 +84,38 @@ router.get('/:id', (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /api/shoes/:
+ *  post:
+ *    description: Use to add a new pair of shoes
+ *    parameters:
+ *      - name: reqBody
+ *        description: request body 
+ *        in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *               price: 
+ *                  type: integer
+ *               category:
+ *                  type: string
+ *               subCategory: 
+ *                  type: string
+ *               size: 
+ *                  type: [integer]
+ *               image: 
+ *                  type: string
+ *          required:
+ *              - price
+ *              - category
+ *              - subCategory
+ *              - size
+ *              - image
+ *    responses:
+ *      '200':
+ *        description: Successfully added a new pair of shoes
+ */
 // TODO only for admins
 router.post('/', upload.single('image'), (req, res, next) => {
     let shoe = new Shoe({
@@ -86,11 +134,49 @@ router.post('/', upload.single('image'), (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /api/shoes/{shoeId}:
+ *  put:
+ *    description: Use to modify an existing pair of shoes
+ *    parameters:
+ *      - name: shoeId
+ *        description: shoes' Id to update
+ *        in: path
+ *        schema:
+ *          type: integer
+ *        required: true
+ *      - name: reqBody
+ *        description: request body 
+ *        in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *               price: 
+ *                  type: integer
+ *               category:
+ *                  type: string
+ *               subCategory: 
+ *                  type: string
+ *               size: 
+ *                  type: [integer]
+ *               image: 
+ *                  type: string
+ *          required:
+ *              - price
+ *              - category
+ *              - subCategory
+ *              - size
+ *              - image
+ *    responses:
+ *      '200':
+ *        description: Successfully modified an existing pair of shoes
+ */
 // TODO only for admins 
-router.put('/:id', /*checkAdmin,*/ (req, res, next) => {
-    Shoe.findByIdAndUpdate({ _id: req.params.id }, req.body)
+router.put('/:shoeId', /*checkAdmin,*/ (req, res, next) => {
+    Shoe.findByIdAndUpdate({ _id: req.params.shoeId }, req.body)
     .then(() => {
-        Shoe.findOne({ _id: req.params.id })
+        Shoe.findOne({ _id: req.params.shoeId })
         .then((shoe) => {
             res.status(200).send(shoe);
         })
@@ -100,19 +186,51 @@ router.put('/:id', /*checkAdmin,*/ (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /api/shoes/{shoeId}:
+ *  delete:
+ *    description: Use to delete one pair of shoes by its Id
+ *    parameters:
+ *      - name: shoeId
+ *        description: shoes' Id 
+ *        in: path
+ *        schema:
+ *          type: integer 
+ *        required: true 
+ *    responses:
+ *      '200':
+ *        description: Successfully deleted a pair of shoes
+ */
 // TODO only for admins
-router.delete('/:id', /*checkAdmin,*/ (req, res, next) => {
-    Shoe.findByIdAndRemove({ _id: req.params.id })
+router.delete('/:shoeId', /*checkAdmin,*/ (req, res, next) => {
+    Shoe.findByIdAndRemove({ _id: req.params.shoeId })
     .then((shoe) => {
         res.status(200).send(shoe);
         })
         .catch(next);
     });
     
-  
+
+/**
+ * @swagger
+ * /api/shoes/category/{category}:
+ *  get:
+ *    description: Use to request all shoes in a specific category
+ *    parameters:
+ *      - name: category
+ *        description: one specific category like sneakers, sandles, classic
+ *        in: path
+ *        schema:
+ *          type: string 
+ *        required: true 
+ *    responses:
+ *      '200':
+ *        description: Successfully requested all shoes in one specific category
+ */
 // return all shoes in one category
-router.get('/category', (req, res, next) => {
-    Shoe.find({ category: req.body.category })
+router.get('/category/:category', (req, res, next) => {
+    Shoe.find({ category: req.params.category })
         .then((shoes) => {  
             res.status(200).send(shoes);
         })
@@ -120,9 +238,31 @@ router.get('/category', (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /api/shoes/category/subCategory/{category}/{subCategory}:
+ *  get:
+ *    description: Use to request all shoes in one specific category and one specific sub category
+ *    parameters:
+ *      - name: category
+ *        description: one specific category like sneakers, sandles or classic
+ *        in: path
+ *        schema:
+ *          type: string 
+ *        required: true 
+ *      - name: subCategory
+ *        description: one specific sub category like male, female or child
+ *        in: path 
+ *        schema: 
+ *           type: string
+ *        required: true
+ *    responses:
+ *      '200':
+ *        description: Successfully requested all shoes in one specific category and one specific sub category
+ */
 // return all shoes in one category with a specific sub category
-router.get('/category/subCategory', (req, res, next) => {
-    Shoe.find({ category: req.body.category, subCategory: req.body.subCategory })
+router.get('/category/subCategory/:category/:subCategory', (req, res, next) => {
+    Shoe.find({ category: req.params.category, subCategory: req.params.subCategory })
         .then((shoes) => {  
             res.status(200).send(shoes);
         })
@@ -130,18 +270,31 @@ router.get('/category/subCategory', (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /api/shoes/allPurchases/{shoeId}:
+ *  get:
+ *    description: Use to request all purchases for one pair of shoes
+ *    parameters:
+ *      - name: shoeId
+ *        description: shoes' Id
+ *        in: path
+ *        schema:
+ *          type: integer 
+ *        required: true 
+ *    responses:
+ *      '200':
+ *        description: Successfully requested all purchses of one pair of shoes
+ */
 // TODO only for admins 
-router.get('/allpurchases/:id', /*checkAdmin,*/ (req, res, next) => {
-    Shoe.findOne({ _id: req.params.id })
-        .then(shoe => {
-            Record.find({ purchaseIds: shoe.id })
-                .then(records => {
-                    return res.status(200).send(records);
-                })
-                .catch(next);
+router.get('/allPurchases/:shoeId', /*checkAdmin,*/ (req, res, next) => {
+    Record.find({ purchasesIds: req.params.shoeId})
+        .then(records => {
+            return res.status(200).send(records);
         })
         .catch(next);
 });
+
 
 
 module.exports = router;

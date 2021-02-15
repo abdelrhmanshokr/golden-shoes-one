@@ -45,25 +45,113 @@ router.post('/', (req, res, next) => {
 });
 
 
+/**
+ * @swagger
+ * /api/users/{userId}:
+ *  put:
+ *    description: Use to modify an existing user
+ *    parameters:
+ *      - name: userId
+ *        description: user's Id to update
+ *        in: path
+ *        schema:
+ *          type: integer
+ *        required: true
+ *      - name: reqBody
+ *        description: request body 
+ *        in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *               userName: 
+ *                  type: string
+ *               phoneNumber:
+ *                  type: integer
+ *               password:
+ *                  type: string
+ *          required:
+ *              - userName
+ *              - phoneNumber
+ *              - password
+ *    responses:
+ *      '200':
+ *        description: Successfully modified an exising user
+ */
 // TODO check if admins can change it if so add another middleware to handle it 
 // TODO registred user or the admin middleware 
 router.put('/:id', /*checkAuth,*/ (req, res, next) => {
-    User.findByIdAndUpdate({ _id: req.params.id }, req.body)
-    .then(() => {
-        User.findOne({ _id: req.params.id })
-        .then((user) => {
-            res.status(200).send(user);
-        })
-        .catch(next);
-    })
-    .catch(next);
+    User.findOne({ _id: req.params.id })
+        .then(user => {
+            if(user){
+                User.find({ phoneNumber: req.body.phoneNumber })
+                    .then(users => {
+                        if(users.length > 0){
+                            return res.status(422).json({
+                                message: `this phoneNumber ${req.body.phoneNumber} already exists please try again with another phone number`
+                            });
+                        }else{
+                            // new phone number is valid now check hash the password
+                            bcrypt.hash(req.body.password, 10, (err, hash) => {
+                                if(err){
+                                    return res.status(500).json({
+                                        errr: err
+                                    });
+                                }else{
+                                    user.update({
+                                        userName: req.body.userName,
+                                        phoneNumber: req.body.phoneNumber,
+                                        password: hash
+                                    });
+                                    user.save()
+                                        .then(user => {
+                                            console.log(user);
+                                            return res.status(201).json({
+                                                message: 'user updated'
+                                            });
+                                        })
+                                        .catch(next);
+                                }
+                            });
+                        }
+                    });
+            }else{
+                return res.status(404).json({
+                    message: 'this user does not exist'
+                })
+            }
+        });
+    // User.findByIdAndUpdate({ _id: req.params.id }, req.body)
+    // .then(() => {
+    //     User.findOne({ _id: req.params.id })
+    //     .then((user) => {
+    //         res.status(200).send(user);
+    //     })
+    //     .catch(next);
+    // })
+    // .catch(next);
 });
 
 
+/**
+ * @swagger
+ * /api/users/{userId}:
+ *  delete:
+ *    description: Use to delete one user by its Id
+ *    parameters:
+ *      - name: userId
+ *        description: users's Id 
+ *        in: path
+ *        schema:
+ *          type: integer 
+ *        required: true 
+ *    responses:
+ *      '200':
+ *        description: Successfully deleted a user
+ */
 // TODO admins can delete the user or a registered user can delete their account
 // TODO registred user or the admin middleware 
-router.delete('/:id', /*checkAuth,*/ (req, res, next) => {
-    User.findByIdAndRemove({ _id: req.params.id })
+router.delete('/:userId', /*checkAuth,*/ (req, res, next) => {
+    User.findByIdAndRemove({ _id: req.params.userId })
     .then((user) => {
         res.status(200).send(user);
         })
@@ -79,7 +167,7 @@ router.post('/signup', (req, res, next) => {
         .then(user => {
             if(user.length > 0){
                 return res.status(422).json({
-                    message: `this phoneNumber ${req.body.phoneNumber} already exists please try again with another phoneNumber`
+                    message: `this phoneNumber ${req.body.phoneNumber} already exists please try again with another phone number`
                 });
             }else{
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
