@@ -240,16 +240,27 @@ router.post('/login', (req, res, next) => {
 });
 
 
-// TODO how to return this user's purchases to the same registered user
-// // TODO registred user or the admin middleware how not to pass both this or that
-router.get('/allpurchases/:id', /*checkAuth,*/ (req, res, next) => {
-    User.findOne({ _id: req.params.id })
-        .then(user => {
-            Record.find({ userId: user.id })
-                .then(records => {
-                    return res.status(200).send(records);
-                })
-                .catch(next);
+/**
+ * @swagger
+ * /api/users/allPurchases/{userId}:
+ *  get:
+ *    description: Use to request all purchases for one pair of shoes
+ *    parameters:
+ *      - name: userId
+ *        description: user's Id
+ *        in: path
+ *        schema:
+ *          type: integer 
+ *        required: true 
+ *    responses:
+ *      '200':
+ *        description: Successfully requested all purchses by one user using their Id
+ */
+// TODO registred user or the admin middleware how not to pass both this or that
+router.get('/allpurchases/:userId', /*checkAuth,*/ (req, res, next) => {
+    Record.find({ userId: req.params.userId })
+        .then(records => {
+            return res.status(200).send(records);
         })
         .catch(next);
 });
