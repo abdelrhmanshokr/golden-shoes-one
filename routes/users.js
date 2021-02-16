@@ -15,6 +15,8 @@ const checkAdmin = require('../middlewares/check-admin');
  * /api/users/:
  *  get:
  *    description: Use to request all users in the system
+ *    tags:
+ *      - users
  *    responses:
  *      '200':
  *        description: A successful response
@@ -50,6 +52,8 @@ router.post('/', (req, res, next) => {
  * /api/users/{userId}:
  *  put:
  *    description: Use to modify an existing user
+ *    tags:
+ *      - users
  *    parameters:
  *      - name: userId
  *        description: user's Id to update
@@ -128,6 +132,8 @@ router.put('/:id', /*checkAuth,*/ (req, res, next) => {
  * /api/users/{userId}:
  *  delete:
  *    description: Use to delete one user by its Id
+ *    tags: 
+ *      - users
  *    parameters:
  *      - name: userId
  *        description: users's Id 
@@ -155,6 +161,8 @@ router.delete('/:userId', /*checkAuth,*/ (req, res, next) => {
  * /api/users/signup:
  *  post:
  *    description: Use to sign a new user up to the system
+ *    tags:
+ *      - users
  *    parameters:
  *      - name: reqBody
  *        description: request body 
@@ -219,6 +227,8 @@ router.post('/signup', (req, res, next) => {
  * /api/users/login:
  *  post:
  *    description: Use to login with user name, password and phone number
+ *    tags:
+ *      - users
  *    parameters:
  *      - name: reqBody
  *        description: request body 
@@ -288,6 +298,8 @@ router.post('/login', (req, res, next) => {
  * /api/users/allPurchases/{userId}:
  *  get:
  *    description: Use to request all purchases for one pair of shoes
+ *    tags:
+ *      - users
  *    parameters:
  *      - name: userId
  *        description: user's Id

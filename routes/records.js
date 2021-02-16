@@ -11,6 +11,8 @@ const checkAdmin = require('../middlewares/check-admin');
  * /api/records/:
  *  get:
  *    description: Use to request all records by all clients
+ *    tags:
+ *      - records
  *    responses:
  *      '200':
  *        description: successfully requested all records (purchases)
@@ -36,6 +38,8 @@ router.get('/', /*checkAdmin,*/ (req, res, next) => {
  * /api/records/user/{userId}:
  *  get:
  *    description: Use to request all records by one client by their Id
+ *    tags:
+ *      - records
  *    parameters:
  *      - name: userId
  *        description: user's Id 
@@ -68,6 +72,8 @@ router.get('/user/:userId', (req, res, next) => {
  * /api/records/{recordId}:
  *  get:
  *    description: Use to request one record by its Id
+ *    tags: 
+ *      - records
  *    parameters:
  *      - name: recordId
  *        description: record's Id
@@ -101,6 +107,8 @@ router.get('/:recordId', (req, res, next) => {
  * /api/records/:
  *  post:
  *    description: Use to add a new record with each new purchase
+ *    tags:
+ *      - records
  *    parameters:
  *      - name: reqBody
  *        description: request body 
@@ -138,6 +146,8 @@ router.post('/', /*checkAuth,*/ (req, res, next) => {
  * /api/records/{recordId}:
  *  put:
  *    description: Use to modify an existing record
+ *    tags:
+ *      - records
  *    parameters:
  *      - name: recordId
  *        description: record's Id to update
@@ -182,6 +192,8 @@ router.put('/:recordId', /*checkAuth,*/ (req, res, next) => {
  * /api/records/{recordId}:
  *  delete:
  *    description: Use to delete one record by its Id
+ *    tags:
+ *      - records
  *    parameters:
  *      - name: recordId
  *        description: record's Id 

@@ -40,6 +40,8 @@ const upload = multer({
  * /api/shoes/:
  *  get:
  *    description: Use to request all shoes in the system
+ *    tags:
+ *      - shoes
  *    responses:
  *      '200':
  *        description: Successfully requested all shoes in the system
@@ -64,6 +66,8 @@ router.get('/', (req, res, next) => {
  * /api/shoes/{shoeId}:
  *  get:
  *    description: Use to request one pair of shoes by its Id
+ *    tags:
+ *      - shoes
  *    parameters:
  *      - name: shoeId
  *        description: shoes' Id
@@ -89,6 +93,8 @@ router.get('/:shoeId', (req, res, next) => {
  * /api/shoes/:
  *  post:
  *    description: Use to add a new pair of shoes
+ *    tags:
+ *      - shoes
  *    parameters:
  *      - name: reqBody
  *        description: request body 
@@ -139,6 +145,8 @@ router.post('/', upload.single('image'), (req, res, next) => {
  * /api/shoes/{shoeId}:
  *  put:
  *    description: Use to modify an existing pair of shoes
+ *    tags:
+ *      - shoes
  *    parameters:
  *      - name: shoeId
  *        description: shoes' Id to update
@@ -191,6 +199,8 @@ router.put('/:shoeId', /*checkAdmin,*/ (req, res, next) => {
  * /api/shoes/{shoeId}:
  *  delete:
  *    description: Use to delete one pair of shoes by its Id
+ *    tags: 
+ *      - shoes
  *    parameters:
  *      - name: shoeId
  *        description: shoes' Id 
@@ -217,6 +227,8 @@ router.delete('/:shoeId', /*checkAdmin,*/ (req, res, next) => {
  * /api/shoes/category/{category}:
  *  get:
  *    description: Use to request all shoes in a specific category
+ *    tags:
+ *      - shoes
  *    parameters:
  *      - name: category
  *        description: one specific category like sneakers, sandles, classic
@@ -243,6 +255,8 @@ router.get('/category/:category', (req, res, next) => {
  * /api/shoes/category/subCategory/{category}/{subCategory}:
  *  get:
  *    description: Use to request all shoes in one specific category and one specific sub category
+ *    tags: 
+ *      - shoes
  *    parameters:
  *      - name: category
  *        description: one specific category like sneakers, sandles or classic
@@ -275,6 +289,8 @@ router.get('/category/subCategory/:category/:subCategory', (req, res, next) => {
  * /api/shoes/allPurchases/{shoeId}:
  *  get:
  *    description: Use to request all purchases for one pair of shoes
+ *    tags:
+ *      - shoes
  *    parameters:
  *      - name: shoeId
  *        description: shoes' Id
