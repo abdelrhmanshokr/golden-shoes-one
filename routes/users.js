@@ -28,7 +28,7 @@ const checkAdmin = require('../middlewares/check-admin');
 router.get('/', /*checkAdmin,*/ (req, res, next) => {
     User.find({})
         .then((users) => {
-            res.status(200).send(users);
+            res.status(201).send(users);
         })
         .catch(next);
 }); 

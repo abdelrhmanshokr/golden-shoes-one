@@ -6,24 +6,30 @@ const Schema = mongoose.Schema;
 const ShoeSchema = new Schema({
     price: {
         type: Number,
-
         required: true,
     },
-    category: {
-        // String passes numbers so enum will accept only these defined values 
+    category: { 
         type: String,
-
         enum: ['sneakers', 'sandles', 'classic'],
-
         required: true,
+        validate: {
+            validator: function(v){
+                let regularExpression = /[a-z]+/i;
+                return v.match(regularExpression);
+            }
+        }
     },
     subCategory: {
         // String passes numbers so enum will accept only these defined values
         type: String,
-
         enum: ['male', 'female', 'child'],
-
         required: true,
+        validate: {
+            validator: function(v){
+                let regularExpression = /[a-z]+/i;
+                return v.match(regularExpression);
+            }
+        }
     },
     size: [{
         type: Number,
@@ -34,16 +40,6 @@ const ShoeSchema = new Schema({
 
         required: [true, 'image is required'],
     },
-
-
-    // recordsId: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Record'
-    // }],
-    // userId: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'User'
-    // }
 });
 
 

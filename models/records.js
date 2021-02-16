@@ -9,8 +9,6 @@ const RecordSchema = new Schema({
         required: true,
         default: Date.now()
     },
-    
-
     // TODO add a flag to indicate if the purchase is deleted or not
     purchasesIds: [{
         type: mongoose.Schema.Types.ObjectId,

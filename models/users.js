@@ -5,19 +5,30 @@ const Schema = mongoose.Schema;
 // create user's schema
 const UserSchema = new Schema({
     userName: {
-        // TODO string accepts numbers it has to only accept ints
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: function(v){
+                let regularExpression = /[a-z]+/i;
+                return v.match(regularExpression);
+            },
+            message: 'Username should not start with a number, please try again'
+        }
     },
     phoneNumber: {
-        type: Number,
+        type: String,
         required: true,
         unique: true,
-        // TODO make this match any 11 digit mobile number or any 7 digit phone number
-        // match: (/\d/g).length===11
+        validate: {
+            validator: function(v){
+                let regularExpression = /^(01)([0-9]{9})/;
+                return v.match(regularExpression);
+            },
+            message: 'Invalid phone number, please try again with a valid phone number'
+        }
     },
     password: {
-        // string accepts numbers it has to only accept ints
+        // can be both numbers strings a combination of both
         type: String,
         required: true
     },
@@ -25,16 +36,6 @@ const UserSchema = new Schema({
         type: Boolean,
         default: 0
     }
-
-
-    // purchasesIds: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Shoe'
-    // }],
-    // recordsIds: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Record'
-    // }]
 });
 
 

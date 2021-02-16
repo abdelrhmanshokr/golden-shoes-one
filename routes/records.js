@@ -25,7 +25,7 @@ const checkAdmin = require('../middlewares/check-admin');
 router.get('/', /*checkAdmin,*/ (req, res, next) => {
     Record.find({})
         .then((records) => {
-            res.status(200).send(records);
+            res.status(201).send(records);
         })
         .catch(next);
 });
@@ -52,7 +52,7 @@ router.get('/user/:userId', (req, res, next) => {
     Record.find({ userId: req.params.userId })
         .then((records) => {
             if(records.length > 0){
-                return res.status(200).send(records);
+                return res.status(201).send(records);
             }else{
                 return res.status(404).json({
                     message: 'No previous purchases for this user'
@@ -85,7 +85,7 @@ router.get('/:recordId', (req, res, next) => {
     Record.findOne({ _id: req.params.recordId })
         .then((record) => {
             if(record){
-                return res.status(200).send(record);
+                return res.status(201).send(record);
             }else{
                 return res.status(404).json({
                     message: 'No such record'
@@ -127,7 +127,7 @@ router.post('/', /*checkAuth,*/ (req, res, next) => {
     });
     record.save()
         .then((record) => {
-            res.status(200).send(record);
+            res.status(201).send(record);
         })
         .catch(next);
 });
