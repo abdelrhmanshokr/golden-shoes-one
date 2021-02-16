@@ -34,12 +34,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-// this route is only for heroku to start that's it 
-app.get('/', (req, res, next) => {
-    res.json({ 
-        message: 'home',
-    })
-});
 app.use('/api/shoes', shoeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/records', recordRoutes);
