@@ -42,7 +42,8 @@ exports.get_one_record_by_its_Id = (req, res, next) => {
 exports.add_new_record_with_new_purchase = (req, res, next) => {
     let record = new Record({
         purchasesIds: req.body.purchasesIds,
-        userId: req.body.userId
+        userName: req.body.userName,
+        phoneNumber: req.body.phoneNumber
     });
     record.save()
         .then((record) => {

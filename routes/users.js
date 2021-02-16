@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const checkAuth = require('../middlewares/check-auth');
-const checkAdmin = require('../middlewares/check-admin');
 
 const usersController = require('../controllers/users');
 
@@ -24,9 +23,37 @@ const usersController = require('../controllers/users');
  *                  item:
  *                   type: any
  */
-router.get('/', /*checkAdmin,*/ usersController.get_all_users); 
+router.get('/', /*checkAuth,*/ usersController.get_all_users); 
 
 
+/**
+ * @swagger
+ * /api/users/:
+ *  post:
+ *    description: Use to add a new user/admin without password hashing just for testing
+ *    tags:
+ *      - users
+ *    parameters:
+ *      - name: reqBody
+ *        description: request body 
+ *        in: body
+ *        schema:
+ *          type: object
+ *          properties:
+ *               userName: 
+ *                  type: string
+ *               phoneNumber:
+ *                  type: string
+ *               password:
+ *                  type: string
+ *          required:
+ *              - userName
+ *              - phoneNumber
+ *              - password
+ *    responses:
+ *      '200':
+ *        description: Successfully added a new user/admin
+ */
 // TODO only for admins check if this route is needed
 router.post('/', usersController.add_new_user);
 
@@ -74,7 +101,7 @@ router.put('/:id', /*checkAuth,*/ usersController.modify_an_existing_user);
  * @swagger
  * /api/users/{userId}:
  *  delete:
- *    description: Use to delete one user by its Id
+ *    description: Use to delete one user/admin by its Id
  *    tags: 
  *      - users
  *    parameters:
@@ -97,7 +124,7 @@ router.delete('/:userId', /*checkAuth,*/ usersController.delete_a_user);
  * @swagger
  * /api/users/signup:
  *  post:
- *    description: Use to sign a new user up to the system
+ *    description: Use to sign a new user/admin up to the system
  *    tags:
  *      - users
  *    parameters:
@@ -129,7 +156,7 @@ router.post('/signup', usersController.user_signup);
  * @swagger
  * /api/users/login:
  *  post:
- *    description: Use to login with user name, password and phone number
+ *    description: Use to login an admin with username, password and phone number
  *    tags:
  *      - users
  *    parameters:

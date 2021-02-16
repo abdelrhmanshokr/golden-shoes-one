@@ -4,7 +4,6 @@ const router = express.Router();
 const recordsController = require('../controllers/records');
 
 const checkAuth = require('../middlewares/check-auth');
-const checkAdmin = require('../middlewares/check-admin');
 
 
 /**
@@ -16,16 +15,18 @@ const checkAdmin = require('../middlewares/check-admin');
  *      - records
  *    responses:
  *      '200':
- *        description: successfully requested all records (purchases)
+ *        description: Successfully requested all records (purchases)
  *        content:
  *          application/json:
  *              schema:
  *                  type: array
  *                  item:
  *                   type: string
+ *      '401':
+ *        description: Unauthorized access
  */
 // TODO only for admins 
-router.get('/', /*checkAdmin,*/ recordsController.get_all_records);
+router.get('/', checkAuth, recordsController.get_all_records);
 
 
 /**
@@ -87,8 +88,10 @@ router.get('/:recordId', recordsController.get_one_record_by_its_Id);
  *        schema:
  *          type: object
  *          properties:
- *               userId: 
- *                  type: [integer]
+ *               userName: 
+ *                  type: string
+ *               phoneNumber:
+ *                  type: string
  *               purchasesIds:
  *                  type: [integer]
  *          required:
@@ -99,7 +102,7 @@ router.get('/:recordId', recordsController.get_one_record_by_its_Id);
  *        description: Successfully added a record (a purchase is done and stored)
  */
 // TODO decrease number of available shoes in stock by some amount
-router.post('/', /*checkAuth,*/ recordsController.add_new_record_with_new_purchase);
+router.post('/', recordsController.add_new_record_with_new_purchase);
 
 
 /**
@@ -135,7 +138,7 @@ router.post('/', /*checkAuth,*/ recordsController.add_new_record_with_new_purcha
  */
 // TODO check if admins can also modify a record
 // TODO adjust number of available shoes in stock by some amount 
-router.put('/:recordId', /*checkAuth,*/ recordsController.modify_an_exsisting_record);
+router.put('/:recordId', recordsController.modify_an_exsisting_record);
 
 
 /**

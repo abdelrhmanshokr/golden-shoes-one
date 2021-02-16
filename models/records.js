@@ -9,17 +9,37 @@ const RecordSchema = new Schema({
         required: true,
         default: Date.now()
     },
+    userName: {
+        type: String,
+        required: true,
+        validate: {
+            validator: function(v){
+                let regularExpression = /[a-z]+/i;
+                return v.match(regularExpression);
+            },
+            message: 'Username should not start with a number, please try again'
+        }
+    },
+    phoneNumber: {
+        type: String,
+        required: true,
+        unique: true,
+        validate: {
+            validator: function(v){
+                let regularExpression = /^(01)([0-9]{9})/;
+                return v.match(regularExpression);
+            },
+            message: 'Invalid phone number, please try again with a valid phone number'
+        }
+    },
+
+
     // TODO add a flag to indicate if the purchase is deleted or not
     purchasesIds: [{
         type: mongoose.Schema.Types.ObjectId,
         ref:  'Shoe',
         required: true,
-    }],
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    }
+    }]
 });
 
 

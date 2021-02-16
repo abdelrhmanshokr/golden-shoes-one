@@ -4,6 +4,8 @@ const multer = require('multer');
 
 const shoesController = require('../controllers/shoes');
 
+const checkAuth = require('../middlewares/check-auth');
+
 
 // multer config to upload an image to a local dir public
 const storage = multer.diskStorage({
@@ -111,7 +113,7 @@ router.get('/:shoeId', shoesController.get_one_pair_of_shoes_by_its_Id);
  *        description: Successfully added a new pair of shoes
  */
 // TODO only for admins
-router.post('/', upload.single('image'), shoesController.add_new_shoe);
+router.post('/', /*checkAuth,*/ upload.single('image'), shoesController.add_new_shoe);
 
 
 /**
@@ -155,7 +157,7 @@ router.post('/', upload.single('image'), shoesController.add_new_shoe);
  *        description: Successfully modified an existing pair of shoes
  */
 // TODO only for admins 
-router.put('/:shoeId', /*checkAdmin,*/ shoesController.modify_an_existing_shoe);
+router.put('/:shoeId', /*checkAuth,*/ shoesController.modify_an_existing_shoe);
 
 
 /**
@@ -177,7 +179,7 @@ router.put('/:shoeId', /*checkAdmin,*/ shoesController.modify_an_existing_shoe);
  *        description: Successfully deleted a pair of shoes
  */
 // TODO only for admins
-router.delete('/:shoeId', /*checkAdmin,*/ shoesController.delete_a_shoe);
+router.delete('/:shoeId', /*checkAuth,*/ shoesController.delete_a_shoe);
     
 
 /**
@@ -249,7 +251,7 @@ router.get('/category/subCategory/:category/:subCategory', shoesController.get_a
  *        description: Successfully requested all purchses of one pair of shoes
  */
 // TODO only for admins 
-router.get('/allPurchases/:shoeId', /*checkAdmin,*/ shoesController.get_all_purchases_of_a_pair_of_shoes);
+router.get('/allPurchases/:shoeId', /*checkAuth,*/ shoesController.get_all_purchases_of_a_pair_of_shoes);
 
 
 module.exports = router;

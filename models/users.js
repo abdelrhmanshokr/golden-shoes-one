@@ -31,10 +31,6 @@ const UserSchema = new Schema({
         // can be both numbers strings a combination of both
         type: String,
         required: true
-    },
-    isAdmin: {
-        type: Boolean,
-        default: 0
     }
 });
 
