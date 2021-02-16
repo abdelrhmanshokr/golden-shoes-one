@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Record = require('../models/records');
+
+const recordsController = require('../controllers/records');
 
 const checkAuth = require('../middlewares/check-auth');
 const checkAdmin = require('../middlewares/check-admin');
@@ -24,13 +25,7 @@ const checkAdmin = require('../middlewares/check-admin');
  *                   type: string
  */
 // TODO only for admins 
-router.get('/', /*checkAdmin,*/ (req, res, next) => {
-    Record.find({})
-        .then((records) => {
-            res.status(201).send(records);
-        })
-        .catch(next);
-});
+router.get('/', /*checkAdmin,*/ recordsController.get_all_records);
 
 
 /**
@@ -52,19 +47,7 @@ router.get('/', /*checkAdmin,*/ (req, res, next) => {
  *        description: successfully requested all records by one user
  */
 //TODO user gets their own records end point
-router.get('/user/:userId', (req, res, next) => {
-    Record.find({ userId: req.params.userId })
-        .then((records) => {
-            if(records.length > 0){
-                return res.status(201).send(records);
-            }else{
-                return res.status(404).json({
-                    message: 'No previous purchases for this user'
-                });
-            }
-        })
-        .catch(next);
-});
+router.get('/user/:userId', recordsController.get_all_records_by_one_user_by_their_Id);
 
 
 /**
@@ -87,19 +70,7 @@ router.get('/user/:userId', (req, res, next) => {
  */
 // get one record by its Id
 // TODO user gets their own records end point check if this user is the auth user
-router.get('/:recordId', (req, res, next) => {
-    Record.findOne({ _id: req.params.recordId })
-        .then((record) => {
-            if(record){
-                return res.status(201).send(record);
-            }else{
-                return res.status(404).json({
-                    message: 'No such record'
-                });
-            }
-        })
-        .catch(next);
-});
+router.get('/:recordId', recordsController.get_one_record_by_its_Id);
 
 
 /**
@@ -128,17 +99,7 @@ router.get('/:recordId', (req, res, next) => {
  *        description: Successfully added a record (a purchase is done and stored)
  */
 // TODO decrease number of available shoes in stock by some amount
-router.post('/', /*checkAuth,*/ (req, res, next) => {
-    let record = new Record({
-        purchasesIds: req.body.purchasesIds,
-        userId: req.body.userId
-    });
-    record.save()
-        .then((record) => {
-            res.status(201).send(record);
-        })
-        .catch(next);
-});
+router.post('/', /*checkAuth,*/ recordsController.add_new_record_with_new_purchase);
 
 
 /**
@@ -174,17 +135,7 @@ router.post('/', /*checkAuth,*/ (req, res, next) => {
  */
 // TODO check if admins can also modify a record
 // TODO adjust number of available shoes in stock by some amount 
-router.put('/:recordId', /*checkAuth,*/ (req, res, next) => {
-    Record.findByIdAndUpdate({ _id: req.params.recordId }, req.body)
-        .then(() => {
-            Record.findOne({ _id: req.params.recordId})
-                .then((record) => {
-                    res.status(200).send(record);
-                })
-                .catch(next);
-        })
-        .catch(next);
-});
+router.put('/:recordId', /*checkAuth,*/ recordsController.modify_an_exsisting_record);
 
 
 /**
@@ -206,13 +157,7 @@ router.put('/:recordId', /*checkAuth,*/ (req, res, next) => {
  *        description: Successfully deleted a record
  */
 // TODO check if admins can also delete a record
-router.delete('/:recordId', /*checkAuth,*/ (req, res, next) => {
-    Record.findByIdAndRemove({ _id: req.params.recordId})
-        .then((record) => {
-            return res.status(200).send(record);
-        })
-        .catch(next);
-});
+router.delete('/:recordId', /*checkAuth,*/ recordsController.delete_a_record);
 
 
 module.exports = router;

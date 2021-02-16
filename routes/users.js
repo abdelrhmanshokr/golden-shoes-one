@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
-const User = require('../models/users');
-const Record = require('../models/records');
 
 const checkAuth = require('../middlewares/check-auth');
 const checkAdmin = require('../middlewares/check-admin');
+
+const usersController = require('../controllers/users');
 
 
 /**
@@ -27,24 +24,11 @@ const checkAdmin = require('../middlewares/check-admin');
  *                  item:
  *                   type: any
  */
-router.get('/', /*checkAdmin,*/ (req, res, next) => {
-    User.find({})
-        .then((users) => {
-            res.status(201).send(users);
-        })
-        .catch(next);
-}); 
+router.get('/', /*checkAdmin,*/ usersController.get_all_users); 
 
 
 // TODO only for admins check if this route is needed
-router.post('/', (req, res, next) => {
-    let user = new User(req.body);
-    user.save()
-        .then((user) => {
-            res.status(201).send(user);
-        })
-        .catch(next);
-});
+router.post('/', usersController.add_new_user);
 
 
 /**
@@ -83,48 +67,7 @@ router.post('/', (req, res, next) => {
  */
 // TODO check if admins can change it if so add another middleware to handle it 
 // TODO registred user or the admin middleware 
-router.put('/:id', /*checkAuth,*/ (req, res, next) => {
-    User.findOne({ _id: req.params.id })
-        .then(user => {
-            if(user){
-                User.find({ phoneNumber: req.body.phoneNumber })
-                    .then(users => {
-                        if(users.length > 0){
-                            return res.status(422).json({
-                                message: `this phoneNumber ${req.body.phoneNumber} already exists please try again with another phone number`
-                            });
-                        }else{
-                            // new phone number is valid now check hash the password
-                            bcrypt.hash(req.body.password, 10, (err, hash) => {
-                                if(err){
-                                    return res.status(500).json({
-                                        errr: err
-                                    });
-                                }else{
-                                    user.update({
-                                        userName: req.body.userName,
-                                        phoneNumber: req.body.phoneNumber,
-                                        password: hash
-                                    });
-                                    user.save()
-                                        .then(user => {
-                                            console.log(user);
-                                            return res.status(201).json({
-                                                message: 'user updated'
-                                            });
-                                        })
-                                        .catch(next);
-                                }
-                            });
-                        }
-                    });
-            }else{
-                return res.status(404).json({
-                    message: 'this user does not exist'
-                })
-            }
-        });
-});
+router.put('/:id', /*checkAuth,*/ usersController.modify_an_existing_user);
 
 
 /**
@@ -147,13 +90,7 @@ router.put('/:id', /*checkAuth,*/ (req, res, next) => {
  */
 // TODO admins can delete the user or a registered user can delete their account
 // TODO registred user or the admin middleware 
-router.delete('/:userId', /*checkAuth,*/ (req, res, next) => {
-    User.findByIdAndRemove({ _id: req.params.userId })
-    .then((user) => {
-        res.status(200).send(user);
-        })
-        .catch(next);
-});
+router.delete('/:userId', /*checkAuth,*/ usersController.delete_a_user);
 
 
 /**
@@ -185,41 +122,7 @@ router.delete('/:userId', /*checkAuth,*/ (req, res, next) => {
  *        description: Successfully created a new user
  */
 // signup end point
-router.post('/signup', (req, res, next) => {
-    // check if the user exists first 
-    User.find({ phoneNumber: req.body.phoneNumber })
-        .exec()
-        .then(user => {
-            if(user.length > 0){
-                return res.status(422).json({
-                    message: `this phoneNumber ${req.body.phoneNumber} already exists please try again with another phone number`
-                });
-            }else{
-                bcrypt.hash(req.body.password, 10, (err, hash) => {
-                    if(err){
-                        return res.status(500).json({
-                            errr: err
-                        });
-                    }else{
-                        const user = new User({
-                            userName: req.body.userName,
-                            phoneNumber: req.body.phoneNumber,
-                            password: hash
-                        });
-                        user.save()
-                            .then(user => {
-                                console.log(user);
-                                return res.status(201).json({
-                                    message: 'user created'
-                                });
-                            })
-                            .catch(next);
-                    }
-                });
-            };
-        })
-        .catch();
-});
+router.post('/signup', usersController.signup);
 
 
 /**
@@ -251,46 +154,7 @@ router.post('/signup', (req, res, next) => {
  *        description: Successfully loggedin
  */
 // login end point
-router.post('/login', (req, res, next) => {
-    User.find({ userName: req.body.userName, phoneNumber: req.body.phoneNumber })
-        .exec()
-        .then(user => {
-            if(user.length < 1){
-                return res.status(401).json({
-                    message: 'Authentication failed'
-                });
-            }else{  
-                bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-                    if(err){
-                        return res.status(401).json({
-                            message: 'Authentication failed'
-                        });
-                    }else if(result){
-                        // create the jwt 
-                        const token = jwt.sign(
-                            {
-                                phoneNumber: user[0].phoneNumber,
-                                user_id: user[0]._id,
-                                isAdmin: user[0].isAdmin
-                            },
-                            'secret', // this could be stored as an env variable but just like this for now 
-                            {
-                                expiresIn: '1h'
-                            }
-                        )
-                        return res.status(200).json({
-                            message: 'Authentication successful',
-                            token: token
-                        }); 
-                    }
-                    return res.status(401).json({
-                        message: 'Authentication failed'
-                    });
-                }); 
-            }
-        })
-        .catch(next);
-});
+router.post('/login', usersController.login);
 
 
 /**
@@ -312,14 +176,7 @@ router.post('/login', (req, res, next) => {
  *        description: Successfully requested all purchses by one user using their Id
  */
 // TODO registred user or the admin middleware how not to pass both this or that
-router.get('/allpurchases/:userId', /*checkAuth,*/ (req, res, next) => {
-    Record.find({ userId: req.params.userId })
-        .then(records => {
-            return res.status(200).send(records);
-        })
-        .catch(next);
-});
+router.get('/allpurchases/:userId', /*checkAuth,*/ usersController.get_all_purchases_by_on_user);
 
-    
-    
+     
 module.exports = router;

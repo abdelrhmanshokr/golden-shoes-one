@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Shoe = require('../models/shoes');
-const Record = require('../models/records');
 const multer = require('multer');
+
+const shoesController = require('../controllers/shoes');
 
 
 // multer config to upload an image to a local dir public
@@ -52,13 +52,7 @@ const upload = multer({
  *                  item:
  *                   type: any
  */
-router.get('/', (req, res, next) => {
-    Shoe.find({})
-        .then((shoes) => {
-            res.status(200).send(shoes);
-        })
-        .catch(next);
-}); 
+router.get('/', shoesController.get_all_shoes); 
 
 
 /**
@@ -79,13 +73,7 @@ router.get('/', (req, res, next) => {
  *      '200':
  *        description: Successfully requested one pair of shoes by its Id
  */
-router.get('/:shoeId', (req, res, next) => {
-    Shoe.findOne({ _id: req.params.shoeId })
-        .then((shoe) => {
-            res.status(200).send(shoe);
-        })
-        .catch(next);
-});
+router.get('/:shoeId', shoesController.get_one_pair_of_shoes_by_its_Id);
 
 
 /**
@@ -123,21 +111,7 @@ router.get('/:shoeId', (req, res, next) => {
  *        description: Successfully added a new pair of shoes
  */
 // TODO only for admins
-router.post('/', upload.single('image'), (req, res, next) => {
-    let shoe = new Shoe({
-        price: req.body.price,
-        category: req.body.category,
-        subCategory: req.body.subCategory,
-        size: req.body.size,
-        image: req.file.path
-    });
-
-    shoe.save()
-        .then((shoe) => {
-            res.status(201).send(shoe);
-        })
-        .catch(next);
-});
+router.post('/', upload.single('image'), shoesController.add_new_shoe);
 
 
 /**
@@ -181,17 +155,7 @@ router.post('/', upload.single('image'), (req, res, next) => {
  *        description: Successfully modified an existing pair of shoes
  */
 // TODO only for admins 
-router.put('/:shoeId', /*checkAdmin,*/ (req, res, next) => {
-    Shoe.findByIdAndUpdate({ _id: req.params.shoeId }, req.body)
-    .then(() => {
-        Shoe.findOne({ _id: req.params.shoeId })
-        .then((shoe) => {
-            res.status(200).send(shoe);
-        })
-        .catch(next);
-    })
-    .catch(next);
-});
+router.put('/:shoeId', /*checkAdmin,*/ shoesController.modify_an_existing_shoe);
 
 
 /**
@@ -213,13 +177,7 @@ router.put('/:shoeId', /*checkAdmin,*/ (req, res, next) => {
  *        description: Successfully deleted a pair of shoes
  */
 // TODO only for admins
-router.delete('/:shoeId', /*checkAdmin,*/ (req, res, next) => {
-    Shoe.findByIdAndRemove({ _id: req.params.shoeId })
-    .then((shoe) => {
-        res.status(200).send(shoe);
-        })
-        .catch(next);
-    });
+router.delete('/:shoeId', /*checkAdmin,*/ shoesController.delete_a_shoe);
     
 
 /**
@@ -241,13 +199,7 @@ router.delete('/:shoeId', /*checkAdmin,*/ (req, res, next) => {
  *        description: Successfully requested all shoes in one specific category
  */
 // return all shoes in one category
-router.get('/category/:category', (req, res, next) => {
-    Shoe.find({ category: req.params.category })
-        .then((shoes) => {  
-            res.status(200).send(shoes);
-        })
-        .catch(next);
-});
+router.get('/category/:category', shoesController.get_all_shoes_in_one_category);
 
 
 /**
@@ -275,13 +227,7 @@ router.get('/category/:category', (req, res, next) => {
  *        description: Successfully requested all shoes in one specific category and one specific sub category
  */
 // return all shoes in one category with a specific sub category
-router.get('/category/subCategory/:category/:subCategory', (req, res, next) => {
-    Shoe.find({ category: req.params.category, subCategory: req.params.subCategory })
-        .then((shoes) => {  
-            res.status(200).send(shoes);
-        })
-        .catch(next);
-});
+router.get('/category/subCategory/:category/:subCategory', shoesController.get_all_shoes_in_one_category_and_one_subcategory);
 
 
 /**
@@ -303,14 +249,7 @@ router.get('/category/subCategory/:category/:subCategory', (req, res, next) => {
  *        description: Successfully requested all purchses of one pair of shoes
  */
 // TODO only for admins 
-router.get('/allPurchases/:shoeId', /*checkAdmin,*/ (req, res, next) => {
-    Record.find({ purchasesIds: req.params.shoeId})
-        .then(records => {
-            return res.status(200).send(records);
-        })
-        .catch(next);
-});
-
+router.get('/allPurchases/:shoeId', /*checkAdmin,*/ shoesController.get_all_purchases_of_a_pair_of_shoes);
 
 
 module.exports = router;
