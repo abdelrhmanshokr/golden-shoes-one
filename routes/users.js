@@ -122,7 +122,7 @@ router.delete('/:userId', /*checkAuth,*/ usersController.delete_a_user);
  *        description: Successfully created a new user
  */
 // signup end point
-router.post('/signup', usersController.signup);
+router.post('/signup', usersController.user_signup);
 
 
 /**
@@ -154,7 +154,7 @@ router.post('/signup', usersController.signup);
  *        description: Successfully loggedin
  */
 // login end point
-router.post('/login', usersController.login);
+router.post('/login', usersController.user_login);
 
 
 /**

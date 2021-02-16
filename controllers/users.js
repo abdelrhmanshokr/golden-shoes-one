@@ -48,7 +48,6 @@ exports.modify_an_existing_user = (req, res, next) => {
                                     });
                                     user.save()
                                         .then(user => {
-                                            console.log(user);
                                             return res.status(201).json({
                                                 message: 'user updated'
                                             });
@@ -76,7 +75,7 @@ exports.delete_a_user = (req, res, next) => {
 };
 
 
-exports.signup = (req, res, next) => {
+exports.user_signup = (req, res, next) => {
     // check if the user exists first 
     User.find({ phoneNumber: req.body.phoneNumber })
         .exec()
@@ -99,7 +98,6 @@ exports.signup = (req, res, next) => {
                         });
                         user.save()
                             .then(user => {
-                                console.log(user);
                                 return res.status(201).json({
                                     message: 'user created'
                                 });
@@ -113,7 +111,7 @@ exports.signup = (req, res, next) => {
 };
 
 
-exports.login = (req, res, next) => {
+exports.user_login = (req, res, next) => {
     User.find({ userName: req.body.userName, phoneNumber: req.body.phoneNumber })
         .exec()
         .then(user => {
