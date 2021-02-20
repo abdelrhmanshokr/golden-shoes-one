@@ -14,6 +14,7 @@ const recordRoutes = require('./routes/records');
 // Extended: https://swagger.io/specification/#infoObject
 const swaggerOptions = {
     definition: {
+        openapi: '3.0.n',
         info: {
             title: "golden-shoes",
             description: "shoes trading mobile app RESTful api",
@@ -21,7 +22,16 @@ const swaggerOptions = {
                 name: "golden-shoes"
             },
             servers: ["http://localhost:3000"]
-        }
+        },
+        components: {
+            securitySchemes: {
+              jwtAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT'
+              },
+            }
+        },
     },
     apis: ['./routes/*.js']
 };

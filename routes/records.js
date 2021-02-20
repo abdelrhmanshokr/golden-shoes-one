@@ -10,18 +10,14 @@ const checkAuth = require('../middlewares/check-auth');
  * @swagger
  * /api/records/:
  *  get:
+ *    security: 
+ *      - jwtAuth: []
  *    description: Use to request all records by all clients
  *    tags:
  *      - records
  *    responses:
  *      '200':
- *        description: Successfully requested all records (purchases)
- *        content:
- *          application/json:
- *              schema:
- *                  type: array
- *                  item:
- *                   type: string
+ *        description: Successfully requested all records (purchases) 
  *      '401':
  *        description: Unauthorized access
  */
@@ -55,6 +51,8 @@ router.get('/user/:userId', recordsController.get_all_records_by_one_user_by_the
  * @swagger
  * /api/records/{recordId}:
  *  get:
+ *    security:
+ *      - jwtAuth: []
  *    description: Use to request one record by its Id
  *    tags: 
  *      - records
@@ -68,10 +66,12 @@ router.get('/user/:userId', recordsController.get_all_records_by_one_user_by_the
  *    responses:
  *      '200':
  *        description: successfully requested one record by its Id
+ *      '401':
+ *        description: Unauthorized access
  */
 // get one record by its Id
 // TODO user gets their own records end point check if this user is the auth user
-router.get('/:recordId', recordsController.get_one_record_by_its_Id);
+router.get('/:recordId', checkAuth, recordsController.get_one_record_by_its_Id);
 
 
 /**
@@ -135,16 +135,20 @@ router.post('/', recordsController.add_new_record_with_new_purchase);
  *    responses:
  *      '200':
  *        description: Successfully modified an exising record (a purchase is done and stored)
+ *      '401':
+ *        description: Unauthorized access
  */
 // TODO check if admins can also modify a record
 // TODO adjust number of available shoes in stock by some amount 
-router.put('/:recordId', recordsController.modify_an_exsisting_record);
+router.put('/:recordId', checkAuth, recordsController.modify_an_exsisting_record);
 
 
 /**
  * @swagger
  * /api/records/{recordId}:
  *  delete:
+ *    security:
+ *      - jwtAuth: []
  *    description: Use to delete one record by its Id
  *    tags:
  *      - records
@@ -158,9 +162,11 @@ router.put('/:recordId', recordsController.modify_an_exsisting_record);
  *    responses:
  *      '200':
  *        description: Successfully deleted a record
+ *      '401':
+ *        description: Unauthorized access
  */
 // TODO check if admins can also delete a record
-router.delete('/:recordId', /*checkAuth,*/ recordsController.delete_a_record);
+router.delete('/:recordId', checkAuth, recordsController.delete_a_record);
 
 
 module.exports = router;

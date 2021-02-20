@@ -47,12 +47,6 @@ const upload = multer({
  *    responses:
  *      '200':
  *        description: Successfully requested all shoes in the system
- *        content:
- *          application/json:
- *              schema:
- *                  type: array
- *                  item:
- *                   type: any
  */
 router.get('/', shoesController.get_all_shoes); 
 
@@ -82,6 +76,8 @@ router.get('/:shoeId', shoesController.get_one_pair_of_shoes_by_its_Id);
  * @swagger
  * /api/shoes/:
  *  post:
+ *    security:
+ *      - jwtAuth: []
  *    description: Use to add a new pair of shoes
  *    tags:
  *      - shoes
@@ -111,15 +107,19 @@ router.get('/:shoeId', shoesController.get_one_pair_of_shoes_by_its_Id);
  *    responses:
  *      '200':
  *        description: Successfully added a new pair of shoes
+ *      '401':
+ *        description: Unauthorized access
  */
 // TODO only for admins
-router.post('/', /*checkAuth,*/ upload.single('image'), shoesController.add_new_shoe);
+router.post('/', checkAuth, upload.single('image'), shoesController.add_new_shoe);
 
 
 /**
  * @swagger
  * /api/shoes/{shoeId}:
  *  put:
+ *    security:
+ *      - jwtAuth: []
  *    description: Use to modify an existing pair of shoes
  *    tags:
  *      - shoes
@@ -155,15 +155,19 @@ router.post('/', /*checkAuth,*/ upload.single('image'), shoesController.add_new_
  *    responses:
  *      '200':
  *        description: Successfully modified an existing pair of shoes
+ *      '401': 
+ *        description: Unauthorized access
  */
 // TODO only for admins 
-router.put('/:shoeId', /*checkAuth,*/ shoesController.modify_an_existing_shoe);
+router.put('/:shoeId', checkAuth, shoesController.modify_an_existing_shoe);
 
 
 /**
  * @swagger
  * /api/shoes/{shoeId}:
  *  delete:
+ *    security:
+ *      - jwtAuth: []
  *    description: Use to delete one pair of shoes by its Id
  *    tags: 
  *      - shoes
@@ -177,9 +181,11 @@ router.put('/:shoeId', /*checkAuth,*/ shoesController.modify_an_existing_shoe);
  *    responses:
  *      '200':
  *        description: Successfully deleted a pair of shoes
+ *      '401':
+ *        description: Unauthorized access
  */
 // TODO only for admins
-router.delete('/:shoeId', /*checkAuth,*/ shoesController.delete_a_shoe);
+router.delete('/:shoeId', checkAuth, shoesController.delete_a_shoe);
     
 
 /**
@@ -236,6 +242,8 @@ router.get('/category/subCategory/:category/:subCategory', shoesController.get_a
  * @swagger
  * /api/shoes/allPurchases/{shoeId}:
  *  get:
+ *    security: 
+ *      - jwtAuth: []
  *    description: Use to request all purchases for one pair of shoes
  *    tags:
  *      - shoes
@@ -249,9 +257,11 @@ router.get('/category/subCategory/:category/:subCategory', shoesController.get_a
  *    responses:
  *      '200':
  *        description: Successfully requested all purchses of one pair of shoes
+ *      '401': 
+ *        description: Unauthorized access
  */
 // TODO only for admins 
-router.get('/allPurchases/:shoeId', /*checkAuth,*/ shoesController.get_all_purchases_of_a_pair_of_shoes);
+router.get('/allPurchases/:shoeId', checkAuth, shoesController.get_all_purchases_of_a_pair_of_shoes);
 
 
 module.exports = router;

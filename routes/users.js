@@ -10,20 +10,18 @@ const usersController = require('../controllers/users');
  * @swagger
  * /api/users/:
  *  get:
+ *    security: 
+ *      - jwtAuth: []
  *    description: Use to request all users in the system
  *    tags:
  *      - users
  *    responses:
  *      '200':
  *        description: A successful response
- *        content:
- *          application/json:
- *              schema:
- *                  type: array
- *                  item:
- *                   type: any
+ *      '401':
+ *        description: Unauthorized access
  */
-router.get('/', /*checkAuth,*/ usersController.get_all_users); 
+router.get('/', checkAuth, usersController.get_all_users); 
 
 
 /**
@@ -62,6 +60,8 @@ router.post('/', usersController.add_new_user);
  * @swagger
  * /api/users/{userId}:
  *  put:
+ *    security: 
+ *      - jwtAuth: []
  *    description: Use to modify an existing user
  *    tags:
  *      - users
@@ -91,16 +91,20 @@ router.post('/', usersController.add_new_user);
  *    responses:
  *      '200':
  *        description: Successfully modified an exising user
+ *      '401':
+ *        description: Unauthorized access
  */
 // TODO check if admins can change it if so add another middleware to handle it 
 // TODO registred user or the admin middleware 
-router.put('/:id', /*checkAuth,*/ usersController.modify_an_existing_user);
+router.put('/:id', checkAuth, usersController.modify_an_existing_user);
 
 
 /**
  * @swagger
  * /api/users/{userId}:
  *  delete:
+ *    security: 
+ *      - jwtAuth: []
  *    description: Use to delete one user/admin by its Id
  *    tags: 
  *      - users
@@ -114,10 +118,12 @@ router.put('/:id', /*checkAuth,*/ usersController.modify_an_existing_user);
  *    responses:
  *      '200':
  *        description: Successfully deleted a user
+ *      '401': 
+ *        descripiton: Unauthorized access
  */
 // TODO admins can delete the user or a registered user can delete their account
 // TODO registred user or the admin middleware 
-router.delete('/:userId', /*checkAuth,*/ usersController.delete_a_user);
+router.delete('/:userId', checkAuth, usersController.delete_a_user);
 
 
 /**
@@ -188,6 +194,8 @@ router.post('/login', usersController.user_login);
  * @swagger
  * /api/users/allPurchases/{userId}:
  *  get:
+ *    security: 
+ *      - jwtAuth: []
  *    description: Use to request all purchases for one pair of shoes
  *    tags:
  *      - users
@@ -201,9 +209,11 @@ router.post('/login', usersController.user_login);
  *    responses:
  *      '200':
  *        description: Successfully requested all purchses by one user using their Id
+ *      '401':
+ *        description: Unauthorized access
  */
 // TODO registred user or the admin middleware how not to pass both this or that
-router.get('/allpurchases/:userId', /*checkAuth,*/ usersController.get_all_purchases_by_on_user);
+router.get('/allpurchases/:userId', checkAuth, usersController.get_all_purchases_by_on_user);
 
      
 module.exports = router;

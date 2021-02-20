@@ -130,8 +130,7 @@ exports.user_login = (req, res, next) => {
                         const token = jwt.sign(
                             {
                                 phoneNumber: user[0].phoneNumber,
-                                user_id: user[0]._id,
-                                isAdmin: user[0].isAdmin
+                                user_id: user[0]._id
                             },
                             'secret', // this could be stored as an env variable but just like this for now 
                             {
