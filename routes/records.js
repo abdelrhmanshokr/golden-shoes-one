@@ -36,8 +36,7 @@ router.get('/', checkAuth, recordsController.get_all_records);
  *      - name: userId
  *        description: user's Id 
  *        in: path
- *        schema:
- *          type: integer 
+ *        type: integer 
  *        required: true 
  *    responses:
  *      '200':
@@ -60,8 +59,7 @@ router.get('/user/:userId', recordsController.get_all_records_by_one_user_by_the
  *      - name: recordId
  *        description: record's Id
  *        in: path
- *        schema:
- *          type: integer 
+ *        type: integer 
  *        required: true 
  *    responses:
  *      '200':
@@ -116,8 +114,7 @@ router.post('/', recordsController.add_new_record_with_new_purchase);
  *      - name: recordId
  *        description: record's Id to update
  *        in: path
- *        schema:
- *          type: integer
+ *        type: integer
  *        required: true
  *      - name: reqBody
  *        description: request body 
@@ -134,7 +131,7 @@ router.post('/', recordsController.add_new_record_with_new_purchase);
  *              - userId
  *    responses:
  *      '200':
- *        description: Successfully modified an exising record (a purchase is done and stored)
+ *        description: Successfully modified an exising record
  *      '401':
  *        description: Unauthorized access
  */
@@ -156,8 +153,7 @@ router.put('/:recordId', checkAuth, recordsController.modify_an_exsisting_record
  *      - name: recordId
  *        description: record's Id 
  *        in: path
- *        schema:
- *          type: integer 
+ *        type: integer 
  *        required: true 
  *    responses:
  *      '200':

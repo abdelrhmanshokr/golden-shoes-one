@@ -69,8 +69,7 @@ router.post('/', usersController.add_new_user);
  *      - name: userId
  *        description: user's Id to update
  *        in: path
- *        schema:
- *          type: integer
+ *        type: integer
  *        required: true
  *      - name: reqBody
  *        description: request body 
@@ -96,7 +95,7 @@ router.post('/', usersController.add_new_user);
  */
 // TODO check if admins can change it if so add another middleware to handle it 
 // TODO registred user or the admin middleware 
-router.put('/:id', checkAuth, usersController.modify_an_existing_user);
+router.put('/:userId', /*checkAuth,*/ usersController.modify_an_existing_user);
 
 
 /**
@@ -112,8 +111,7 @@ router.put('/:id', checkAuth, usersController.modify_an_existing_user);
  *      - name: userId
  *        description: users's Id 
  *        in: path
- *        schema:
- *          type: integer 
+ *        type: integer 
  *        required: true 
  *    responses:
  *      '200':
@@ -203,8 +201,7 @@ router.post('/login', usersController.user_login);
  *      - name: userId
  *        description: user's Id
  *        in: path
- *        schema:
- *          type: integer 
+ *        type: integer 
  *        required: true 
  *    responses:
  *      '200':
@@ -213,7 +210,7 @@ router.post('/login', usersController.user_login);
  *        description: Unauthorized access
  */
 // TODO registred user or the admin middleware how not to pass both this or that
-router.get('/allpurchases/:userId', checkAuth, usersController.get_all_purchases_by_on_user);
+router.get('/allpurchases/:userId', /*checkAuth,*/ usersController.get_all_purchases_by_on_user);
 
      
 module.exports = router;

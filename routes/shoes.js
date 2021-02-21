@@ -62,8 +62,7 @@ router.get('/', shoesController.get_all_shoes);
  *      - name: shoeId
  *        description: shoes' Id
  *        in: path
- *        schema:
- *          type: integer 
+ *        type: integer 
  *        required: true 
  *    responses:
  *      '200':
@@ -127,8 +126,7 @@ router.post('/', checkAuth, upload.single('image'), shoesController.add_new_shoe
  *      - name: shoeId
  *        description: shoes' Id to update
  *        in: path
- *        schema:
- *          type: integer
+ *        type: integer
  *        required: true
  *      - name: reqBody
  *        description: request body 
@@ -175,8 +173,7 @@ router.put('/:shoeId', checkAuth, shoesController.modify_an_existing_shoe);
  *      - name: shoeId
  *        description: shoes' Id 
  *        in: path
- *        schema:
- *          type: integer 
+ *        type: integer 
  *        required: true 
  *    responses:
  *      '200':
@@ -199,8 +196,7 @@ router.delete('/:shoeId', checkAuth, shoesController.delete_a_shoe);
  *      - name: category
  *        description: one specific category like sneakers, sandles, classic
  *        in: path
- *        schema:
- *          type: string 
+ *        type: string 
  *        required: true 
  *    responses:
  *      '200':
@@ -221,14 +217,12 @@ router.get('/category/:category', shoesController.get_all_shoes_in_one_category)
  *      - name: category
  *        description: one specific category like sneakers, sandles or classic
  *        in: path
- *        schema:
- *          type: string 
+ *        type: string 
  *        required: true 
  *      - name: subCategory
  *        description: one specific sub category like male, female or child
  *        in: path 
- *        schema: 
- *           type: string
+ *        type: string
  *        required: true
  *    responses:
  *      '200':
@@ -251,8 +245,7 @@ router.get('/category/subCategory/:category/:subCategory', shoesController.get_a
  *      - name: shoeId
  *        description: shoes' Id
  *        in: path
- *        schema:
- *          type: integer 
+ *        type: integer
  *        required: true 
  *    responses:
  *      '200':

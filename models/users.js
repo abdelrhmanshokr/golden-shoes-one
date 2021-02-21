@@ -7,6 +7,7 @@ const UserSchema = new Schema({
     userName: {
         type: String,
         required: true,
+        trim: true,
         validate: {
             validator: function(v){
                 let regularExpression = /[a-z]+/i;
@@ -19,6 +20,7 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         unique: true,
+        
         validate: {
             validator: function(v){
                 let regularExpression = /^(01)([0-9]{9})/;
@@ -30,9 +32,10 @@ const UserSchema = new Schema({
     password: {
         // can be both numbers strings a combination of both
         type: String,
-        required: true
+        required: true,
+        trim: true
     }
-});
+}); 
 
 
 // create a model out of this schema 
