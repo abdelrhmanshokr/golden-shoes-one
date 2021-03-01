@@ -98,7 +98,7 @@ exports.user_signup = (req, res, next) => {
         .then(user => {
             if(user.length > 0){
                 return res.status(422).json({
-                    message: `this phoneNumber ${req.body.phoneNumber} already exists please try again with another phone number`
+                    message: `this phone number ${req.body.phoneNumber} already exists please try again with another phone number`
                 });
             }else{
                 bcrypt.hash(req.body.password, 10, (err, hash) => {

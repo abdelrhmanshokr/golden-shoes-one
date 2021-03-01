@@ -80,7 +80,7 @@ router.post('/', usersController.add_new_user);
  *               userName: 
  *                  type: string
  *               phoneNumber:
- *                  type: integer
+ *                  type: string
  *               password:
  *                  type: string
  *          required:
@@ -141,7 +141,7 @@ router.delete('/:userId', checkAuth, usersController.delete_a_user);
  *               userName: 
  *                  type: string
  *               phoneNumber:
- *                  type: integer
+ *                  type: string
  *               password:
  *                  type: string
  *          required:
@@ -173,7 +173,7 @@ router.post('/signup', usersController.user_signup);
  *               userName: 
  *                  type: string
  *               phoneNumber:
- *                  type: integer
+ *                  type: string
  *               password:
  *                  type: string
  *          required:
