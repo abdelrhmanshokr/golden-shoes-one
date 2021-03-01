@@ -12,6 +12,7 @@ const ShoeSchema = new Schema({
         type: String,
         enum: ['sneakers', 'sandles', 'classic'],
         required: true,
+        trim: true,
         validate: {
             validator: function(v){
                 let regularExpression = /[a-z]+/i;
@@ -24,6 +25,7 @@ const ShoeSchema = new Schema({
         type: String,
         enum: ['male', 'female', 'child'],
         required: true,
+        trim: true,
         validate: {
             validator: function(v){
                 let regularExpression = /[a-z]+/i;

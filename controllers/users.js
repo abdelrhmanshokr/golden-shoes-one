@@ -74,27 +74,6 @@ exports.modify_an_existing_user = (req, res, next) => {
                                     .catch(next);
                             })
                             .catch(next);
-                        // User.findByIdAndUpdate({ _id: req.params.userId }, {
-                        //     userName: req.body.userName,
-                        //     phoneNumber: req.body.phoneNumber,
-                        //     password: hash
-                        // }, (err, user) => {
-                        //     if(err){
-                        //         return res.status(500).json({
-                        //             message: 'User not updated',
-                        //             error: err
-                        //         })
-                        //     }else{
-                        //         User.findOne({ _id: req.params.userId })
-                        //             .then(updatedUser => {
-                        //                 return res.status(201).json({
-                        //                     message: 'user updated',
-                        //                     user: updatedUser
-                        //                 });
-                        //             })
-                        //             .catch(next);
-                        //     }
-                        // });
                     }
                 });
             };
